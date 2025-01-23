@@ -7,9 +7,26 @@
 #include <limits.h>
 #include <time.h> // for metrics
 #include <string.h>
+#include <pthread.h>
 
 // Global flag to check for Ctrl+C
 volatile sig_atomic_t keep_running = true;
+
+long global_max_vcd = 0;
+pthread_mutex_t max_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+long global_min_vcd = 0;
+pthread_mutex_t min_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+time_t max_time = 0;
+time_t min_time = 0;
+
+int global_it_count = 0;
+pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+pthread_mutex_t run_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+int fuzz_size = 32;
 
 // Signal handler
 void handle_sigint(int sig)
@@ -29,27 +46,129 @@ long get_file_size (char* filename)
     return file_status.st_size;
 }
 
-void remove_invalid (void)
+//void remove_invalid (void)
+//{
+//    //system("sed -i '/8082/c\\ ' mutate.hex"); // replace c.jr x1 (return)
+//    system("sed -i '/100f/c\\3' mutate.hex"); // replace fence.i
+//    system("sed -i '/73/c\\3' mutate.hex"); // replace ecall
+//    system("sed -i '/100073/c\\3' mutate.hex"); // replace ebreak
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
+//    return;
+//}
+
+void* fuzz_thread(void* arg)
 {
-    //system("sed -i '/8082/c\\ ' mutate.hex"); // replace c.jr x1 (return)
-    system("sed -i '/100f/c\\3' mutate.hex"); // replace fence.i
-    system("sed -i '/73/c\\3' mutate.hex"); // replace ecall
-    system("sed -i '/100073/c\\3' mutate.hex"); // replace ebreak
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    //system("sed -i '/100f/c\\0001' mutate.hex"); // replace fence.i
-    return;
+    int thread_id = *((int*)arg);
+    char thread_dir[10];
+    snprintf(thread_dir, 10, "thread_%d", thread_id);
+    //mkdir(thread_dir, 0777);
+
+    long tmp = 0;
+    long local_max_vcd = 0;
+    long local_min_vcd = INT_MAX;
+    //char mutate[40] = {0};
+    //snprintf(mutate, 40, "./mutate -g %d > instr.hex", fuzz_size);
+
+    // filepaths for each instance
+    char hex[120] = {0};
+    char test[50] = {0};
+    char vcd[30] = {0};
+    char max[30] = {0};
+    snprintf(hex, 120,
+             "rm -f %s/instr.hex && "
+             "./mutate -g %d > %s/instr.hex && "
+             "echo 8082 >> %s/instr.hex",
+             thread_dir, fuzz_size, thread_dir, thread_dir);
+    snprintf(max, 30, "%s/instr.hex", thread_dir);
+    snprintf(test, 50, "./testbench_vivado 2>&1 > /dev/null");
+    snprintf(vcd, 30, "%s/testbench.vcd", thread_dir);
+
+    while (keep_running)
+    {
+        system(hex);
+
+        pthread_mutex_lock(&run_mutex);
+        rename(max, "instr.hex");
+        int result = system(test);
+        rename("testbench.vcd", vcd);
+        pthread_mutex_unlock(&run_mutex);
+        if (WIFSIGNALED(result))
+        {
+            keep_running = false;
+            printf("Thread %d: Ctrl+C pressed. Exiting gracefully...\n", thread_id);
+            return NULL;
+        }
+
+        tmp = 0;
+        tmp = get_file_size(vcd);
+
+        if (tmp > local_max_vcd)
+        {
+            local_max_vcd = tmp;
+        }
+
+        pthread_mutex_lock(&max_mutex);
+        if (local_max_vcd > global_max_vcd)
+        {
+            global_max_vcd = local_max_vcd;
+            rename(vcd, "max.vcd");
+            rename(hex, "max.hex");
+            time(&max_time);
+        }
+        pthread_mutex_unlock(&max_mutex);
+
+        pthread_mutex_lock(&count_mutex);
+        global_it_count++;
+        pthread_mutex_unlock(&count_mutex);
+    }
+
+    return NULL;
+}
+
+void* metric_thread(void* arg)
+{
+    int thread_id = *((int*)arg);
+    time_t start_time, curr_time, maxd_time, mind_time;
+    double ela_time, ips;
+
+    time(&start_time);
+
+    if (signal(SIGINT, handle_sigint) == SIG_ERR)
+    {
+        perror("signal");
+        return NULL;
+    }
+
+    while(keep_running)
+    {
+        time(&curr_time);
+        ela_time = difftime(curr_time, start_time);
+        maxd_time = difftime(curr_time, max_time);
+        mind_time = difftime(curr_time, min_time);
+
+        if (ela_time > 0)
+        {
+            ips = (double) global_it_count / ela_time;
+            printf("Fuzzing with size: %d, Loop iteration: %d, Iterations/sec: %.2f\n",
+                   fuzz_size, global_it_count, ips);
+            printf("Time since new max: %jds, Time since new min: %jds\n", maxd_time, mind_time);
+            printf("Current max: %ld, Current min: %ld\033[A\033[F", global_max_vcd, global_min_vcd);
+        }
+        sleep(1);
+    }
 }
 
 int main(int argc, char* argv[])
 {
-    int fuzz_size = 32;
+    int num_threads = 1;
 
     if (argc > 1)
     {
@@ -64,11 +183,21 @@ int main(int argc, char* argv[])
             {
                 if (argv[i+1] == NULL)
                 {
-                    printf("No number provided. Exiting...\n");
+                    printf("No sequence count provided. Exiting...\n");
                     return 1;
                 }
                 fuzz_size = atoi(argv[i+1]);
-                break;
+                continue;
+            }
+            else if (strcmp(argv[i], "-t") == 0)
+            {
+                if (argv[i+1] == NULL)
+                {
+                    printf("No thread count provided. Exiting...\n");
+                    return 1;
+                }
+                num_threads = atoi(argv[i+1]);
+                continue;
             }
         }
     }
@@ -82,97 +211,136 @@ int main(int argc, char* argv[])
 
     printf("Starting the fuzzer. Press Ctrl+C to exit.\n");
 
-    // Fuzzing stuff
-    int i = 0;
-    long tmp = 0;
-    long max_vcd = 0;
-    long min_vcd = INT_MAX;
+    //time_t start_time, curr_time, max_time, maxd_time, min_time, mind_time;
+    //double elapsed_time, ips;
+    
+    time(&max_time);
+    time(&min_time);
 
-    // Time metric stuff
-    time_t start_time, current_time;
-    double elapsed_time, ips;
+    // Thread stuff
+    pthread_t threads[num_threads];
+    int thread_ids[num_threads];
 
-    // Initialize start time
-    time(&start_time);
-
-    // create initial hex file
-    char mutate[40] = {0};
-    char rmprev[80] = {0};
-    snprintf(mutate, 40, "./mutate -g %d > mutate.hex", fuzz_size);
-    system("rm -fv instr.hex mutate.hex");
-    system("cat start.hex > instr.hex");
-    system(mutate);
-    remove_invalid();
-    system("cat mutate.hex >> instr.hex");
-    system("echo 8082 >> instr.hex");
-
-    while (keep_running)
+    for (int i = 0; i < num_threads; i++)
     {
-        time(&current_time);
-        elapsed_time = difftime(current_time, start_time);
-
-        if (elapsed_time > 0)
+        thread_ids[i] = i;
+        if (i == 0)
         {
-            ips = (double) i / elapsed_time;
-            printf("Fuzzing with size: %d, Loop iteration: %d, Iterations/sec: %.2f\r", fuzz_size, i++, ips);
+            if (pthread_create(&threads[i], NULL, metric_thread, &thread_ids[i]))
+            {
+                fprintf(stderr, "Error creating thread\n");
+                return 1;
+            }
         }
-        else
+        else if (pthread_create(&threads[i], NULL, fuzz_thread, &thread_ids[i]))
         {
-            printf("Loop iteration: %d\r", i++);
+            fprintf(stderr, "Error creating thread\n");
+            return 1;
         }
-        fflush(stdout);
-        //sleep(1);
-
-        // mutate hex file
-        system("rm -fv instr.hex mutate.hex");
-        //if (access("max.hex", F_OK) == 0)
-        //{
-        //    system("cp max.hex instr.hex");
-        //}
-        //else if (i > 2) 
-        //{
-        //    printf("Bad max.hex. Exiting...\n");
-        //    return 1;
-        //}
-        //snprintf(rmprev, 80, "head -n -%d instr.hex > temp.hex ; mv temp.hex instr.hex", fuzz_size);
-        //system(rmprev); // remove previous instructions
-        system("cat start.hex > instr.hex");
-        system(mutate);
-        remove_invalid();
-        system("cat mutate.hex >> instr.hex");
-        system("echo 8082 >> instr.hex");
-        
-        // run verilator hiding crashes
-        int result = system("./testbench_verilator +vcd +noerror");// 2>&1 > /dev/null");
-        if (WIFSIGNALED(result))
-        {
-            keep_running = false;
-            printf("Ctrl+C pressed. Exiting gracefully...\n");
-            break;
-        }
-
-        // vcd size things
-        tmp = 0;
-        tmp = get_file_size("testbench.vcd");
-
-        // save significant vcd
-        if (tmp > max_vcd)
-        {
-            max_vcd = tmp;
-            rename("testbench.vcd", "max.vcd");
-            system("cp instr.hex max.hex");
-        }
-        else if (tmp < min_vcd)
-        {
-            min_vcd = tmp;
-            rename("testbench.vcd", "min.vcd");
-            system("cp instr.hex min.hex");
-        }
-
-        // extras
-        // track time/performance
-        // track specific instruction
     }
+
+    for (int i = 0; i < num_threads; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
+
+    //// Fuzzing stuff
+    //int i = 0;
+    //long tmp = 0;
+    //long max_vcd = 0;
+    //long min_vcd = INT_MAX;
+
+    //// Time metric stuff
+    //time_t start_time, current_time, max_time, maxd_time, min_time, mind_time;
+    //double elapsed_time, ips;
+
+    //// Initialize start time
+    //time(&start_time);
+
+    //// create initial hex file
+    //char mutate[40] = {0};
+    //char rmprev[80] = {0};
+    //snprintf(mutate, 40, "./mutate -g %d > instr.hex", fuzz_size);
+    //system("rm -f instr.hex");
+    ////system("cat start.hex > instr.hex");
+    //system(mutate);
+    ////remove_invalid();
+    ////system("cat mutate.hex >> instr.hex");
+    //system("echo 8082 >> instr.hex");
+
+    //while (keep_running)
+    //{
+    //    time(&current_time);
+    //    elapsed_time = difftime(current_time, start_time);
+    //    maxd_time = difftime(current_time, max_time);
+    //    mind_time = difftime(current_time, min_time);
+
+    //    if (elapsed_time > 0)
+    //    {
+    //        ips = (double) i / elapsed_time;
+    //        printf("Fuzzing with size: %d, Loop iteration: %d, Iterations/sec: %.2f\n", fuzz_size, i++, ips);
+    //        printf("Time since new max: %jds, Time since new min: %jds\n", maxd_time, mind_time);
+    //        printf("Current max: %ld, Current min: %ld\033[A\033[F", max_vcd, min_vcd);
+    //    }
+    //    else
+    //    {
+    //        printf("Loop iteration: %d\r", i++);
+    //    }
+    //    fflush(stdout);
+    //    //sleep(1);
+
+    //    // mutate hex file
+    //    system("rm -f instr.hex");
+    //    //if (access("max.hex", F_OK) == 0)
+    //    //{
+    //    //    system("cp max.hex instr.hex");
+    //    //}
+    //    //else if (i > 2) 
+    //    //{
+    //    //    printf("Bad max.hex. Exiting...\n");
+    //    //    return 1;
+    //    //}
+    //    //snprintf(rmprev, 80, "head -n -%d instr.hex > temp.hex ; mv temp.hex instr.hex", fuzz_size);
+    //    //system(rmprev); // remove previous instructions
+    //    //system("cat start.hex > instr.hex");
+    //    system(mutate);
+    //    //remove_invalid();
+    //    //system("cat mutate.hex >> instr.hex");
+    //    system("echo 8082 >> instr.hex");
+    //    
+    //    // run verilator hiding crashes
+    //    int result = system("./testbench_vivado +vcd +noerror 2>&1 > /dev/null");
+    //    if (WIFSIGNALED(result))
+    //    {
+    //        keep_running = false;
+    //        printf("Ctrl+C pressed. Exiting gracefully...\n");
+    //        break;
+    //    }
+
+    //    // vcd size things
+    //    tmp = 0;
+    //    tmp = get_file_size("testbench.vcd");
+
+    //    // save significant vcd
+    //    if (tmp > max_vcd)
+    //    {
+    //        max_vcd = tmp;
+    //        rename("testbench.vcd", "max.vcd");
+    //        system("cp instr.hex max.hex");
+    //        time(&max_time);
+    //    }
+    //    else if (tmp < min_vcd)
+    //    {
+    //        min_vcd = tmp;
+    //        rename("testbench.vcd", "min.vcd");
+    //        system("cp instr.hex min.hex");
+    //        time(&min_time);
+    //    }
+
+    //    // extras
+    //    // track time/performance
+    //    // track specific instruction
+    //}
 
     printf("Fuzzer finished.\n");
 
