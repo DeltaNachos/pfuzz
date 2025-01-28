@@ -28,6 +28,8 @@ pthread_mutex_t run_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int fuzz_size = 32;
 const long hard_max = 128000; // need this to stop runoff tests
+int monitor = 0; // for graphing
+volatile double ela_time = 0;
 
 // Signal handler
 void handle_sigint(int sig)
@@ -105,9 +107,19 @@ void* fuzz_thread(void* arg)
         {
             global_max_vcd = local_max_vcd;
             rename(vcd, "max.vcd");
-            //rename("instr.hex", "max.hex");
             system("cp instr.hex max.hex");
             time(&max_time);
+
+            if (monitor == 1)
+            {
+                FILE *fp = fopen("max_track.csv", "a");
+                if (fp != NULL)
+                {
+                    fprintf(fp, "%.0f,%ld\n", ela_time, global_max_vcd);
+                    fclose(fp);
+                }
+                else perror("Error opening max_track.csv");
+            }
         }
         pthread_mutex_unlock(&max_mutex);
 
@@ -116,9 +128,19 @@ void* fuzz_thread(void* arg)
         {
             global_min_vcd = local_min_vcd;
             rename(vcd, "min.vcd");
-            //rename("instr.hex", "min.hex");
             system("cp instr.hex min.hex");
             time(&min_time);
+
+            if (monitor == 1)
+            {
+                FILE *fp = fopen("min_track.csv", "a");
+                if (fp != NULL)
+                {
+                    fprintf(fp, "%.0f,%ld\n", ela_time, global_min_vcd);
+                    fclose(fp);
+                }
+                else perror("Error opening min_track.csv");
+            }
         }
         pthread_mutex_unlock(&min_mutex);
         
@@ -134,7 +156,8 @@ void* metric_thread(void* arg)
 {
     int thread_id = *((int*)arg);
     time_t start_time, curr_time, maxd_time, mind_time;
-    double ela_time, ips;
+    double ips;
+    int tot_sec, hour, min, sec;
 
     time(&start_time);
 
@@ -157,7 +180,14 @@ void* metric_thread(void* arg)
             printf("Fuzzing with size: %d, Loop iteration: %d, Iterations/sec: %.2f\n",
                    fuzz_size, global_it_count, ips);
             printf("Time since new max: %jds, Time since new min: %jds\n", maxd_time, mind_time);
-            printf("Current max: %ld, Current min: %ld\033[A\033[F", global_max_vcd, global_min_vcd);
+            printf("Current max: %ld, Current min: %ld\n", global_max_vcd, global_min_vcd);
+
+            // Total runtime
+            tot_sec = (int) ela_time;
+            hour = tot_sec / 3600;
+            min = (tot_sec % 3600) / 60;
+            sec = tot_sec % 60;
+            printf("Total runtime: %02d:%02d:%02d\033[2A\033[F", hour, min, sec);
         }
         sleep(1);
     }
@@ -165,7 +195,7 @@ void* metric_thread(void* arg)
 
 int main(int argc, char* argv[])
 {
-    int num_threads = 1;
+    int num_threads = 2;
 
     if (argc > 1)
     {
@@ -194,6 +224,12 @@ int main(int argc, char* argv[])
                     return 1;
                 }
                 num_threads = atoi(argv[i+1]);
+                num_threads++;
+                continue;
+            }
+             else if (strcmp(argv[i], "-m") == 0)
+            {
+                monitor = 1;
                 continue;
             }
         }
