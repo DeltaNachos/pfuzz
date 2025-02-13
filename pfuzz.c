@@ -27,9 +27,10 @@ pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t run_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int fuzz_size = 32;
-const long hard_max = 128000; // need this to stop runoff tests
+const long hard_max = 1024000; // need this to stop runoff tests
 int monitor = 0; // for graphing
 volatile double ela_time = 0;
+char design[16] = "vsodor";
 
 // Signal handler
 void handle_sigint(int sig)
@@ -71,7 +72,7 @@ void* fuzz_thread(void* arg)
              "echo 8082 >> %s/instr.hex",
              thread_dir, fuzz_size, thread_dir, thread_dir);
     snprintf(max, 30, "%s/instr.hex", thread_dir);
-    snprintf(test, 60, "timeout 10 ./testbench_vivado 2>&1 > /dev/null");
+    snprintf(test, 60, "timeout 1 ./%s instr.hex 2>&1 > /dev/null", design);
     snprintf(vcd, 30, "%s/testbench.vcd", thread_dir);
 
     while (keep_running)
@@ -181,6 +182,7 @@ void* metric_thread(void* arg)
                    fuzz_size, global_it_count, ips);
             printf("Time since new max: %jds, Time since new min: %jds\n", maxd_time, mind_time);
             printf("Current max: %ld, Current min: %ld\n", global_max_vcd, global_min_vcd);
+            fflush(stdout);
 
             // Total runtime
             tot_sec = (int) ela_time;
@@ -203,8 +205,19 @@ int main(int argc, char* argv[])
         {
             if (strcmp(argv[i], "-h") == 0)
             {
-                printf("Usage: pfuzz -c [# of instructions] -t [# of threads, min: 2]\n");
+                printf("Usage: pfuzz -d [name of testbench] -c [# of instructions] -t [# of threads, min: 2] -m [enables csv monitor]\n");
                 return 0;
+            }
+            else if (strcmp(argv[i], "-d") == 0)
+            {
+                if (argv[i+1] == NULL)
+                {
+                    printf("No name provided. Exiting...\n");
+                    return 1;
+                }
+                strncpy(design, argv[i+1], sizeof(design) - 1);
+                design[sizeof(design) - 1] = '\0';
+                continue;
             }
             else if (strcmp(argv[i], "-c") == 0)
             {
