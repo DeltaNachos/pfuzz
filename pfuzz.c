@@ -27,7 +27,7 @@ pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t run_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int fuzz_size = 32;
-const long hard_max = 1024000; // need this to stop runoff tests
+const long hard_max = 1000000000; // need this to stop runoff tests <1GB
 int monitor = 0; // for graphing
 volatile double ela_time = 0;
 char design[16] = "vsodor";
@@ -72,7 +72,7 @@ void* fuzz_thread(void* arg)
              "echo 8082 >> %s/instr.hex",
              thread_dir, fuzz_size, thread_dir, thread_dir);
     snprintf(max, 30, "%s/instr.hex", thread_dir);
-    snprintf(test, 60, "timeout 1 ./%s instr.hex 2>&1 > /dev/null", design);
+    snprintf(test, 60, "timeout 10 ./%s instr.hex 2>&1 > /dev/null", design);
     snprintf(vcd, 30, "%s/testbench.vcd", thread_dir);
 
     while (keep_running)
