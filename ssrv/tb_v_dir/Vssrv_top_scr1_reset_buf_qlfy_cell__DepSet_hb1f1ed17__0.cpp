@@ -8,6 +8,17 @@
 #include "Vssrv_top__Syms.h"
 #include "Vssrv_top_scr1_reset_buf_qlfy_cell.h"
 
+VL_INLINE_OPT void Vssrv_top_scr1_reset_buf_qlfy_cell___ico_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__0(Vssrv_top_scr1_reset_buf_qlfy_cell* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+          Vssrv_top_scr1_reset_buf_qlfy_cell___ico_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__0\n"); );
+    // Body
+    vlSelf->__PVT__reset_n_in_mux = ((IData)(vlSelf->__PVT__test_mode)
+                                      ? (IData)(vlSelf->__PVT__test_rst_n)
+                                      : ((IData)(vlSelf->__PVT__rst_n) 
+                                         & (IData)(vlSelf->__PVT__reset_n_in)));
+}
+
 VL_INLINE_OPT void Vssrv_top_scr1_reset_buf_qlfy_cell___nba_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__0(Vssrv_top_scr1_reset_buf_qlfy_cell* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;

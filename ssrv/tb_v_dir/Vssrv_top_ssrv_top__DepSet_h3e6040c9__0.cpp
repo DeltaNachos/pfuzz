@@ -14,6 +14,7 @@ VL_INLINE_OPT void Vssrv_top_ssrv_top___ico_sequent__TOP__ssrv_top__0(Vssrv_top_
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+      Vssrv_top_ssrv_top___ico_sequent__TOP__ssrv_top__0\n"); );
     // Body
+    vlSymsp->TOP__ssrv_top__core.__PVT__rst_n = vlSelf->rst_n;
     vlSymsp->TOP__ssrv_top__memory_modelling_inst.__PVT__clk 
         = vlSelf->clk;
     vlSymsp->TOP__ssrv_top__core.__PVT__clk = vlSelf->clk;
@@ -106,7 +107,6 @@ VL_INLINE_OPT void Vssrv_top_ssrv_top___nba_sequent__TOP__ssrv_top__0(Vssrv_top_
     vlSelf->__Vdly__tck = vlSelf->__PVT__tck;
     vlSelf->__Vdly__trst_n = vlSelf->__PVT__trst_n;
     vlSelf->__Vdly__cpu_rst_n = vlSelf->__PVT__cpu_rst_n;
-    vlSelf->__Vdly__rst_n = vlSelf->__PVT__rst_n;
     vlSelf->__Vdly__pwrup_rst_n = vlSelf->__PVT__pwrup_rst_n;
     vlSelf->__Vdly__test_rst_n = vlSelf->__PVT__test_rst_n;
     vlSelf->__Vdly__test_mode = vlSelf->__PVT__test_mode;
@@ -114,7 +114,6 @@ VL_INLINE_OPT void Vssrv_top_ssrv_top___nba_sequent__TOP__ssrv_top__0(Vssrv_top_
     vlSelf->__Vdly__timer_irq = vlSelf->__PVT__timer_irq;
     vlSelf->__Vdly__soft_irq = vlSelf->__PVT__soft_irq;
     vlSelf->__Vdly__pwrup_rst_n = 1U;
-    vlSelf->__Vdly__rst_n = 1U;
     vlSelf->__Vdly__cpu_rst_n = 1U;
     vlSelf->__Vdly__test_mode = 0U;
     vlSelf->__Vdly__test_rst_n = 0U;
@@ -130,7 +129,6 @@ VL_INLINE_OPT void Vssrv_top_ssrv_top___nba_sequent__TOP__ssrv_top__0(Vssrv_top_
     vlSelf->__PVT__tck = vlSelf->__Vdly__tck;
     vlSelf->__PVT__tms = vlSelf->__Vdly__tms;
     vlSelf->__PVT__tdi = vlSelf->__Vdly__tdi;
-    vlSelf->__PVT__rst_n = vlSelf->__Vdly__rst_n;
     vlSelf->__PVT__cpu_rst_n = vlSelf->__Vdly__cpu_rst_n;
     vlSelf->__PVT__pwrup_rst_n = vlSelf->__Vdly__pwrup_rst_n;
     vlSelf->__PVT__test_mode = vlSelf->__Vdly__test_mode;
@@ -139,7 +137,6 @@ VL_INLINE_OPT void Vssrv_top_ssrv_top___nba_sequent__TOP__ssrv_top__0(Vssrv_top_
     vlSelf->__PVT__mtime_ext = vlSelf->__Vdly__mtime_ext;
     vlSelf->__PVT__soft_irq = vlSelf->__Vdly__soft_irq;
     vlSelf->__PVT__timer_irq = vlSelf->__Vdly__timer_irq;
-    vlSymsp->TOP__ssrv_top__core.__PVT__rst_n = vlSelf->__PVT__rst_n;
     vlSymsp->TOP__ssrv_top__core.__PVT__cpu_rst_n = vlSelf->__PVT__cpu_rst_n;
     vlSymsp->TOP__ssrv_top__core.__PVT__pwrup_rst_n 
         = vlSelf->__PVT__pwrup_rst_n;

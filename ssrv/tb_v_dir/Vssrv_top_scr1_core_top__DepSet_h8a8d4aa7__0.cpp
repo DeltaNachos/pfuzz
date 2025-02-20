@@ -14,10 +14,15 @@ VL_INLINE_OPT void Vssrv_top_scr1_core_top___ico_sequent__TOP__ssrv_top__core__0
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+        Vssrv_top_scr1_core_top___ico_sequent__TOP__ssrv_top__core__0\n"); );
     // Body
+    vlSelf->__PVT__rst_n_sync = vlSelf->__PVT__rst_n;
     vlSymsp->TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell.__PVT__clk 
         = vlSelf->__PVT__clk;
     vlSymsp->TOP__ssrv_top__core__i_pipe_top.__PVT__clk 
         = vlSelf->__PVT__clk;
+    vlSelf->__PVT__core_rst_n_sync = ((IData)(vlSelf->__PVT__rst_n_sync) 
+                                      & (IData)(vlSelf->__PVT__cpu_rst_n_sync));
+    vlSymsp->TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell.__PVT__reset_n_in 
+        = vlSelf->__PVT__core_rst_n_sync;
 }
 
 VL_INLINE_OPT void Vssrv_top_scr1_core_top___act_sequent__TOP__ssrv_top__core__0(Vssrv_top_scr1_core_top* vlSelf) {
@@ -93,7 +98,6 @@ VL_INLINE_OPT void Vssrv_top_scr1_core_top___nba_sequent__TOP__ssrv_top__core__1
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+        Vssrv_top_scr1_core_top___nba_sequent__TOP__ssrv_top__core__1\n"); );
     // Body
-    vlSelf->__PVT__rst_n_sync = vlSelf->__PVT__rst_n;
     vlSelf->__PVT__cpu_rst_n_sync = vlSelf->__PVT__cpu_rst_n;
     vlSelf->__PVT__pwrup_rst_n_sync = vlSelf->__PVT__pwrup_rst_n;
     vlSymsp->TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell.__PVT__test_mode 

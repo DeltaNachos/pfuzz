@@ -9,7 +9,8 @@ module ssrv_top
   parameter SCR1_RESET_INPUTS_SYNC = 1 // Reset inputs are: 1 - synchronous, 0 -asynchronous  
 )
 (
-	input clk
+	input clk,
+	input rst_n
 );   
 
 	//Common Outputs
@@ -37,7 +38,7 @@ module ssrv_top
 
 
 	reg pwrup_rst_n = 1;
-	reg rst_n = 1;  // Active low reset
+	//reg rst_n = 1;  // Active low reset
 	reg cpu_rst_n = 1;
 	reg test_mode = 0;  // Or 1, depending on your needs
 	reg test_rst_n = 0;
@@ -55,7 +56,7 @@ module ssrv_top
 
 	always @(posedge clk) begin
 		pwrup_rst_n <= 1;
-		rst_n <= 1;  // Active low reset
+	//	rst_n <= 1;  // Active low reset
 		cpu_rst_n <= 1;
 		test_mode <= 0;  // Or 1, depending on your needs
 		test_rst_n <= 0;

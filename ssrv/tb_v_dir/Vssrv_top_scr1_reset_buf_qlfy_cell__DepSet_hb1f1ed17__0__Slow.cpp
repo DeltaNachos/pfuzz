@@ -28,6 +28,13 @@ VL_ATTR_COLD void Vssrv_top_scr1_reset_buf_qlfy_cell___stl_sequent__TOP__ssrv_to
     vlSelf->__PVT__rst_n_mux = ((IData)(vlSelf->__PVT__test_mode)
                                  ? (IData)(vlSelf->__PVT__test_rst_n)
                                  : (IData)(vlSelf->__PVT__rst_n));
+}
+
+VL_ATTR_COLD void Vssrv_top_scr1_reset_buf_qlfy_cell___stl_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__2(Vssrv_top_scr1_reset_buf_qlfy_cell* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+          Vssrv_top_scr1_reset_buf_qlfy_cell___stl_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__2\n"); );
+    // Body
     vlSelf->__PVT__reset_n_in_mux = ((IData)(vlSelf->__PVT__test_mode)
                                       ? (IData)(vlSelf->__PVT__test_rst_n)
                                       : ((IData)(vlSelf->__PVT__rst_n) 

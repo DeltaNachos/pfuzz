@@ -248,6 +248,7 @@ VL_ATTR_COLD void Vssrv_top___024root___ctor_var_reset(Vssrv_top___024root* vlSe
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vssrv_top___024root___ctor_var_reset\n"); );
     // Body
     vlSelf->clk = VL_RAND_RESET_I(1);
+    vlSelf->rst_n = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_exu____PVT__tdu2exu_i_x_req__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_tdu____PVT__csr2tdu_req__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__i_ialu____PVT__mdu_cmd__0 = VL_RAND_RESET_I(2);

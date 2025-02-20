@@ -239,6 +239,7 @@ VL_ATTR_COLD void Vssrv_top___024root___stl_sequent__TOP__0(Vssrv_top___024root*
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vssrv_top___024root___stl_sequent__TOP__0\n"); );
     // Body
+    vlSymsp->TOP__ssrv_top.rst_n = vlSelf->rst_n;
     vlSymsp->TOP__ssrv_top.clk = vlSelf->clk;
 }
 
@@ -259,6 +260,7 @@ VL_ATTR_COLD void Vssrv_top_scr1_pipe_exu___stl_sequent__TOP__ssrv_top__core__i_
 VL_ATTR_COLD void Vssrv_top_scr1_pipe_ifu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_ifu__1(Vssrv_top_scr1_pipe_ifu* vlSelf);
 VL_ATTR_COLD void Vssrv_top_scr1_pipe_top___stl_sequent__TOP__ssrv_top__core__i_pipe_top__2(Vssrv_top_scr1_pipe_top* vlSelf);
 VL_ATTR_COLD void Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__2(Vssrv_top_ssrv_top* vlSelf);
+VL_ATTR_COLD void Vssrv_top_scr1_reset_buf_qlfy_cell___stl_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__2(Vssrv_top_scr1_reset_buf_qlfy_cell* vlSelf);
 VL_ATTR_COLD void Vssrv_top_scr1_pipe_lsu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__i_lsu__0(Vssrv_top_scr1_pipe_lsu* vlSelf);
 VL_ATTR_COLD void Vssrv_top_scr1_pipe_exu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__2(Vssrv_top_scr1_pipe_exu* vlSelf);
 VL_ATTR_COLD void Vssrv_top_scr1_pipe_idu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_idu__0(Vssrv_top_scr1_pipe_idu* vlSelf);
@@ -387,8 +389,8 @@ VL_ATTR_COLD void Vssrv_top___024root___eval_stl(Vssrv_top___024root* vlSelf) {
         Vssrv_top_scr1_pipe_tdu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_tdu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_tdu));
         Vssrv_top_scr1_pipe_top___stl_sequent__TOP__ssrv_top__core__i_pipe_top__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top));
         Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__0((&vlSymsp->TOP__ssrv_top));
-        Vssrv_top_scr1_pipe_csr___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_csr__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_csr));
         Vssrv_top___024root___stl_sequent__TOP__0(vlSelf);
+        Vssrv_top_scr1_pipe_csr___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_csr__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_csr));
         Vssrv_top_scr1_pipe_ifu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_ifu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_ifu));
         Vssrv_top_scr1_pipe_exu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_exu));
         Vssrv_top_scr1_core_top___stl_sequent__TOP__ssrv_top__core__0((&vlSymsp->TOP__ssrv_top__core));
@@ -401,6 +403,7 @@ VL_ATTR_COLD void Vssrv_top___024root___eval_stl(Vssrv_top___024root* vlSelf) {
         Vssrv_top_scr1_pipe_ifu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_ifu__1((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_ifu));
         Vssrv_top_scr1_pipe_top___stl_sequent__TOP__ssrv_top__core__i_pipe_top__2((&vlSymsp->TOP__ssrv_top__core__i_pipe_top));
         Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__2((&vlSymsp->TOP__ssrv_top));
+        Vssrv_top_scr1_reset_buf_qlfy_cell___stl_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__2((&vlSymsp->TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell));
         Vssrv_top_scr1_pipe_lsu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__i_lsu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__i_lsu));
         Vssrv_top_scr1_pipe_exu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__2((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_exu));
         Vssrv_top_scr1_pipe_idu___stl_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_idu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_idu));

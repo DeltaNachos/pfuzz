@@ -16,7 +16,6 @@ VL_ATTR_COLD void Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__0(Vssrv_top_s
     // Body
     vlSelf->__PVT__dmem_req_ack = vlSymsp->TOP__ssrv_top__memory_modelling_inst.__PVT__dmem_req_ack;
     vlSymsp->TOP__ssrv_top__core.__PVT__cpu_rst_n = vlSelf->__PVT__cpu_rst_n;
-    vlSymsp->TOP__ssrv_top__core.__PVT__rst_n = vlSelf->__PVT__rst_n;
     vlSymsp->TOP__ssrv_top__core.__PVT__pwrup_rst_n 
         = vlSelf->__PVT__pwrup_rst_n;
     vlSelf->__PVT__imem_req_ack = vlSymsp->TOP__ssrv_top__memory_modelling_inst.__PVT__imem_req_ack;
@@ -49,6 +48,7 @@ VL_ATTR_COLD void Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__1(Vssrv_top_s
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+      Vssrv_top_ssrv_top___stl_sequent__TOP__ssrv_top__1\n"); );
     // Body
+    vlSymsp->TOP__ssrv_top__core.__PVT__rst_n = vlSelf->rst_n;
     vlSymsp->TOP__ssrv_top__memory_modelling_inst.__PVT__clk 
         = vlSelf->clk;
     vlSymsp->TOP__ssrv_top__core.__PVT__clk = vlSelf->clk;

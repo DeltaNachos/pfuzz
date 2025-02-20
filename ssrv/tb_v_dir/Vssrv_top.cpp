@@ -13,6 +13,7 @@ Vssrv_top::Vssrv_top(VerilatedContext* _vcontextp__, const char* _vcname__)
     : VerilatedModel{*_vcontextp__}
     , vlSymsp{new Vssrv_top__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
+    , rst_n{vlSymsp->TOP.rst_n}
     , __PVT__ssrv_top{vlSymsp->TOP.__PVT__ssrv_top}
     , rootp{&(vlSymsp->TOP)}
 {

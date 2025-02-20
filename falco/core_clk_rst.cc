@@ -58,6 +58,12 @@ int main (int argc, char** argv, char** env) {
 	*/
 	//Vbiriscv_top___024root* rp = top->rootp;
 
+    // GET TRACE
+    VerilatedVcdC* tfp = new VerilatedVcdC;
+    Verilated::traceEverOn(true);
+    top->trace(tfp, 99);
+    tfp->open("testbench.vcd");
+
 	srand(seed);
 
 	// reset core
@@ -72,17 +78,13 @@ int main (int argc, char** argv, char** env) {
 	top->eval();
 
         // Providing clock to the rtl
-	for (int i = 0; i < 200; i++) {
-          contextp->timeInc(1);
-	  if ((main_time % 10) == 1) {
-                  top->clk = 1;
-		  top->eval();
-	  }
-	  else if ((main_time % 10) == 6) {
-		  top-> clk = 0;
-		  top->eval();
-	  }
-	  main_time++;
+	for (int i = 0; i < 200; i++)
+    {
+        contextp->timeInc(1);
+        top->clk = !top->clk;
+        top->eval();
+        tfp->dump(main_time);
+	    main_time++;
 	}
 
 	/*

@@ -20,6 +20,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vssrv_top_ssrv_top final : public VerilatedMo
 
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
+    VL_IN8(rst_n,0,0);
     CData/*0:0*/ __PVT__core_rst_n_out;
     CData/*0:0*/ __PVT__imem_req;
     CData/*0:0*/ __PVT__imem_cmd;
@@ -31,7 +32,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vssrv_top_ssrv_top final : public VerilatedMo
     CData/*0:0*/ __PVT__dmem_req_ack;
     CData/*1:0*/ __PVT__dmem_resp;
     CData/*0:0*/ __PVT__pwrup_rst_n;
-    CData/*0:0*/ __PVT__rst_n;
     CData/*0:0*/ __PVT__cpu_rst_n;
     CData/*0:0*/ __PVT__test_mode;
     CData/*0:0*/ __PVT__test_rst_n;
@@ -42,7 +42,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vssrv_top_ssrv_top final : public VerilatedMo
     CData/*0:0*/ __PVT__tms;
     CData/*0:0*/ __PVT__tdi;
     CData/*0:0*/ __Vdly__pwrup_rst_n;
-    CData/*0:0*/ __Vdly__rst_n;
     CData/*0:0*/ __Vdly__cpu_rst_n;
     CData/*0:0*/ __Vdly__test_mode;
     CData/*0:0*/ __Vdly__test_rst_n;

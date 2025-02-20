@@ -98,5 +98,7 @@ void Vssrv_top___024root___eval_debug_assertions(Vssrv_top___024root* vlSelf) {
     // Body
     if (VL_UNLIKELY((vlSelf->clk & 0xfeU))) {
         Verilated::overWidthError("clk");}
+    if (VL_UNLIKELY((vlSelf->rst_n & 0xfeU))) {
+        Verilated::overWidthError("rst_n");}
 }
 #endif  // VL_DEBUG

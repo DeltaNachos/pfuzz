@@ -72,7 +72,15 @@ int main (int argc, char** argv, char** env) {
 
 	srand(seed);
 
+	// reset core
 	top->clk = 0;
+	top->rst_n = 1;
+	top->eval();
+	top->clk = 1;
+	top->rst_n = 0;
+	top->eval();
+	top->clk = 0;
+	top->rst_n = 1;
 	top->eval();
 
     // Providing clock to the rtl

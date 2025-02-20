@@ -31,12 +31,14 @@ VL_INLINE_OPT void Vssrv_top___024root___ico_sequent__TOP__0(Vssrv_top___024root
     Vssrv_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vssrv_top___024root___ico_sequent__TOP__0\n"); );
     // Body
+    vlSymsp->TOP__ssrv_top.rst_n = vlSelf->rst_n;
     vlSymsp->TOP__ssrv_top.clk = vlSelf->clk;
 }
 
 void Vssrv_top_ssrv_top___ico_sequent__TOP__ssrv_top__0(Vssrv_top_ssrv_top* vlSelf);
 void Vssrv_top_scr1_core_top___ico_sequent__TOP__ssrv_top__core__0(Vssrv_top_scr1_core_top* vlSelf);
 void Vssrv_top_scr1_pipe_top___ico_sequent__TOP__ssrv_top__core__i_pipe_top__0(Vssrv_top_scr1_pipe_top* vlSelf);
+void Vssrv_top_scr1_reset_buf_qlfy_cell___ico_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__0(Vssrv_top_scr1_reset_buf_qlfy_cell* vlSelf);
 void Vssrv_top_scr1_pipe_exu___ico_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__0(Vssrv_top_scr1_pipe_exu* vlSelf);
 
 void Vssrv_top___024root___eval_ico(Vssrv_top___024root* vlSelf) {
@@ -50,6 +52,7 @@ void Vssrv_top___024root___eval_ico(Vssrv_top___024root* vlSelf) {
         Vssrv_top_ssrv_top___ico_sequent__TOP__ssrv_top__0((&vlSymsp->TOP__ssrv_top));
         Vssrv_top_scr1_core_top___ico_sequent__TOP__ssrv_top__core__0((&vlSymsp->TOP__ssrv_top__core));
         Vssrv_top_scr1_pipe_top___ico_sequent__TOP__ssrv_top__core__i_pipe_top__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top));
+        Vssrv_top_scr1_reset_buf_qlfy_cell___ico_sequent__TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell__0((&vlSymsp->TOP__ssrv_top__core__i_core_rstn_buf_qlfy_cell));
         Vssrv_top_scr1_pipe_exu___ico_sequent__TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__0((&vlSymsp->TOP__ssrv_top__core__i_pipe_top__i_pipe_exu));
     }
 }

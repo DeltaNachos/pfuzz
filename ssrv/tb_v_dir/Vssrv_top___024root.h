@@ -18,6 +18,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vssrv_top___024root final : public VerilatedM
 
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
+    VL_IN8(rst_n,0,0);
     CData/*0:0*/ __Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_exu____PVT__tdu2exu_i_x_req__0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_tdu____PVT__csr2tdu_req__0;
     CData/*1:0*/ __Vtrigprevexpr___TOP__ssrv_top__core__i_pipe_top__i_pipe_exu__i_ialu____PVT__mdu_cmd__0;

@@ -7,71 +7,71 @@ DENYLIST=/home/erin/Research/Fuzzing/RISC-Optimized/cores/falco/lists/denylist.t
 ALLOWLIST=/home/erin/Research/Fuzzing/RISC-Optimized/cores/falco/lists/allowlist.txt
 
 TYPES = \
-    ./hdl/include/Include/Falco_pkg.sv
+    ./include/Include/Falco_pkg.sv
 
 CORE_MODULES = \
-	./hdl/include/issue_queue/int_balance_picker.sv \
-	./hdl/include/issue_queue/int_issue_queue.sv \
-	./hdl/include/issue_queue/int_rob_tag_replay_unit.sv \
-	./hdl/include/issue_queue/empty_entry_finder.sv \
-	./hdl/include/issue_queue/empty_entry_finder8_wrapper.sv \
-	./hdl/include/Cache/L1_cache_pkg.sv \
-	./hdl/include/Commit/reorder_buffer.sv \
-	./hdl/include/LoadStoreUnit/combine_data_unit.sv \
-	./hdl/include/register_read/register_read.sv \
-	./hdl/include/issue_queue/mem_replay_unit.sv \
-	./hdl/include/execute/ALU.sv \
-	./hdl/include/Instruction_Decode/ID_stage_io.sv \
-	./hdl/include/execute/exe_stage_io.sv \
-	./hdl/include/Rename_Dispatch/register_map_table.sv \
-	./hdl/include/Rename_Dispatch/RNDS_stage.sv \
-	./hdl/include/Address_Generate_stage/AGU_io.sv \
-	./hdl/include/LoadStoreUnit/load_forward_unit.sv \
-	./hdl/include/core_top.sv \
-	./hdl/include/pipeline_recovery/pipeline_control_recovery_io.sv \
-	./hdl/include/execute/fast_mul.sv \
-	./hdl/include/issue_queue/int_iq_ctr_rob_tag_balance_selector.sv \
-	./hdl/include/execute/divider.sv \
-	./hdl/include/Instruction_Fetch/IF_stage.sv \
-	./hdl/include/Instruction_Fetch/gshare_branch_predictor.sv \
-	./hdl/include/LoadStoreUnit/load_store_unit_io.sv \
-	./hdl/include/issue_queue/int_issue_queue_io.sv \
-	./hdl/include/LoadStoreUnit/store_buffer.sv \
-	./hdl/include/execute/alu_csr_bc_execute_group.sv \
-	./hdl/include/utility/distri_ram2r1w.v \
-	./hdl/include/register_read/physical_register_file.sv \
-	./hdl/include/LoadStoreUnit/load_buffer_io.sv \
-	./hdl/include/issue_queue/mem_iq_balance_selector_wo_store.sv \
-	./hdl/include/LoadStoreUnit/last_fetch_store_table.sv \
-	./hdl/include/LoadStoreUnit/load_buffer.sv \
-	./hdl/include/Commit/committed_map_table.sv \
-	./hdl/include/Address_Generate_stage/AGU.sv \
-	./hdl/include/Rename_Dispatch/prf_freelist.sv \
-	./hdl/include/Rename_Dispatch/busy_list.sv \
-	./hdl/include/Rename_Dispatch/rename_dispatch_io.sv \
-	./hdl/include/Instruction_Decode/decoder.sv \
-	./hdl/include/issue_queue/mem_issue_queue_io.sv \
-	./hdl/include/Instruction_Decode/ID_stage.sv \
-	./hdl/include/LoadStoreUnit/mem_access.sv \
-	./hdl/include/pipeline_recovery/pipeline_control_recovery.sv \
-	./hdl/include/Instruction_Fetch/program_counter.sv \
-	./hdl/include/Instruction_Fetch/IF_stage_io.sv \
-	./hdl/include/LoadStoreUnit/load_store_unit.sv \
-	./hdl/include/Commit/commit_stage_io.sv \
-	./hdl/include/execute/branch_unit.sv \
-	./hdl/include/LoadStoreUnit/store_buffer_io.sv \
-	./hdl/include/utility/sram_dual_port.sv \
-	./hdl/include/CSR/csr_io.sv \
-	./hdl/include/LoadStoreUnit/mem_access_io.sv \
-	./hdl/include/execute/alu_muldiv_execute_group.sv \
-	./hdl/include/LoadStoreUnit/store_set_id_table.sv \
-	./hdl/include/register_read/register_read_io.sv \
-	./hdl/include/CSR/csr.sv \
-	./hdl/include/issue_queue/mem_issue_queue.sv \
-	./hdl/include/Instruction_Fetch/BTB.sv \
-	./hdl/mem_model/model_parameters.v \
-	./hdl/mem_model/falco_mem_model.sv \
-	./hdl/falco_top.sv
+	./include/issue_queue/int_balance_picker.sv \
+	./include/issue_queue/int_issue_queue.sv \
+	./include/issue_queue/int_rob_tag_replay_unit.sv \
+	./include/issue_queue/empty_entry_finder.sv \
+	./include/issue_queue/empty_entry_finder8_wrapper.sv \
+	./include/Cache/L1_cache_pkg.sv \
+	./include/Commit/reorder_buffer.sv \
+	./include/LoadStoreUnit/combine_data_unit.sv \
+	./include/register_read/register_read.sv \
+	./include/issue_queue/mem_replay_unit.sv \
+	./include/execute/ALU.sv \
+	./include/Instruction_Decode/ID_stage_io.sv \
+	./include/execute/exe_stage_io.sv \
+	./include/Rename_Dispatch/register_map_table.sv \
+	./include/Rename_Dispatch/RNDS_stage.sv \
+	./include/Address_Generate_stage/AGU_io.sv \
+	./include/LoadStoreUnit/load_forward_unit.sv \
+	./include/core_top.sv \
+	./include/pipeline_recovery/pipeline_control_recovery_io.sv \
+	./include/execute/fast_mul.sv \
+	./include/issue_queue/int_iq_ctr_rob_tag_balance_selector.sv \
+	./include/execute/divider.sv \
+	./include/Instruction_Fetch/IF_stage.sv \
+	./include/Instruction_Fetch/gshare_branch_predictor.sv \
+	./include/LoadStoreUnit/load_store_unit_io.sv \
+	./include/issue_queue/int_issue_queue_io.sv \
+	./include/LoadStoreUnit/store_buffer.sv \
+	./include/execute/alu_csr_bc_execute_group.sv \
+	./include/utility/distri_ram2r1w.v \
+	./include/register_read/physical_register_file.sv \
+	./include/LoadStoreUnit/load_buffer_io.sv \
+	./include/issue_queue/mem_iq_balance_selector_wo_store.sv \
+	./include/LoadStoreUnit/last_fetch_store_table.sv \
+	./include/LoadStoreUnit/load_buffer.sv \
+	./include/Commit/committed_map_table.sv \
+	./include/Address_Generate_stage/AGU.sv \
+	./include/Rename_Dispatch/prf_freelist.sv \
+	./include/Rename_Dispatch/busy_list.sv \
+	./include/Rename_Dispatch/rename_dispatch_io.sv \
+	./include/Instruction_Decode/decoder.sv \
+	./include/issue_queue/mem_issue_queue_io.sv \
+	./include/Instruction_Decode/ID_stage.sv \
+	./include/LoadStoreUnit/mem_access.sv \
+	./include/pipeline_recovery/pipeline_control_recovery.sv \
+	./include/Instruction_Fetch/program_counter.sv \
+	./include/Instruction_Fetch/IF_stage_io.sv \
+	./include/LoadStoreUnit/load_store_unit.sv \
+	./include/Commit/commit_stage_io.sv \
+	./include/execute/branch_unit.sv \
+	./include/LoadStoreUnit/store_buffer_io.sv \
+	./include/utility/sram_dual_port.sv \
+	./include/CSR/csr_io.sv \
+	./include/LoadStoreUnit/mem_access_io.sv \
+	./include/execute/alu_muldiv_execute_group.sv \
+	./include/LoadStoreUnit/store_set_id_table.sv \
+	./include/register_read/register_read_io.sv \
+	./include/CSR/csr.sv \
+	./include/issue_queue/mem_issue_queue.sv \
+	./include/Instruction_Fetch/BTB.sv \
+	./mem_model/model_parameters.v \
+	./mem_model/falco_mem_model.sv \
+	./falco_top.sv
 
 VERILATOR_DISABLED_WARNING = \
 -Wno-WIDTH \
@@ -104,10 +104,7 @@ VERILATOR_OPTION = \
     -DSIZE_OF_THE_BUS=32 \
     +incdir+$(TYPES_DIR) \
     +incdir+$(CORE_DIR)/mem_model \
-    --compiler clang \
-    --top-module falco_top \
-    --trace-structs \
-    --no-trace-params
+    --top-module falco_top
 
 #AFL_LLVM_ALLOWLIST=$(ALLOWLIST) 
 #AFL_LLVM_ALLOWLIST=$(ALLOWLIST) 
@@ -136,5 +133,11 @@ falco_edge:
 	cd obj_dir && $(CXX) $(CXX_FLAGS) -fprofile-instr-generate -fcoverage-mapping -c -o verilated.o $(VERILATOR_ROOT)/include/verilated.cpp
 	$(CXX) -v -fprofile-instr-generate -fcoverage-mapping -latomic -I$(VERILATOR_ROOT)/include -pthread -I$(VERILATOR_ROOT)/include/vltstd -I./obj_dir ./c_tests/core_clk_rst.cc ./obj_dir/Vfalco_top__ALL.a ./obj_dir/verilated.o $(VERILATOR_ROOT)/include/verilated_threads.cpp -o falco_edge
 
-make clean:
-	rm -rf falco_afl falco_cov falco_edge ./obj_dir/*
+testbench:
+	verilator -O0 --exe $(VERILATOR_OPTION) $(TYPES) $(CORE_MODULES) -trace core_clk_rst.cc \
+		--Mdir tb_v_dir
+	$(MAKE) -C tb_v_dir -f Vfalco_top.mk
+	cp tb_v_dir/Vfalco_top vfalco
+
+clean:
+	rm -rf tb_v_dir
