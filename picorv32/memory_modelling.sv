@@ -1,0 +1,83 @@
+`include "model_parameters.v"
+
+module memory_modelling (input logic clk, 
+	                input logic [3:0] mem_la_wstrb, 
+			input logic [`SIZE_OF_THE_BUS - 1:0] mem_la_wdata, 
+			input logic [`SIZE_OF_THE_BUS - 1:0] mem_la_addr, 
+			input logic mem_la_read,
+			input logic mem_la_write,
+			input logic mem_instr,
+			input logic mem_valid,
+			output logic mem_ready, 
+			output logic [`SIZE_OF_THE_BUS - 1:0] mem_rdata);
+
+  import "DPI-C" function bit [`SIZE_OF_THE_BUS - 1:0] instruction_generator ();
+
+// maps with address as key and instruction/data as value
+  // logic [`SIZE_OF_THE_BUS - 1:0] denotes the data structure is an array of items (value) of 32-bits each --> instruction/data value is 32 bits
+  // [logic [`SIZE_OF_THE_BUS - 1:0]] denotes that the indicies (key) is of 32-bits --> memory address is 32 bits
+  logic [`SIZE_OF_THE_BUS - 1:0] current_db [logic [`SIZE_OF_THE_BUS - 1:0]];
+  logic [`SIZE_OF_THE_BUS - 1:0] initial_db [logic [`SIZE_OF_THE_BUS - 1:0]];
+  int file_handle;
+
+  always @(posedge clk) begin
+   // On every clock cycle checking for reading
+   mem_ready <= 1;
+   if (mem_la_read) begin
+     mem_rdata = mem_read (mem_la_addr);
+   end
+   // On every clock cycle checking for writing
+   if(mem_la_write == 1) begin
+     mem_write (mem_la_addr, mem_la_wstrb, mem_la_wdata);
+   end
+  end
+
+  //initial begin
+  //        $display ("Initial mem = %p", initial_db);
+  //end
+
+  // Read function : Reads value from the associative array type memory implementation.
+  // Input : Memory address
+  // Functionality : 
+  // 1. Retrieves the instruction stored in the memory
+  // 2. If memory is not present then, it is created and depending upon the memory address data/instruction is stored in the memory.
+  //    addr < 32'hFFFF then we store instruction into the memory
+  //    addr > 32'hFFFF then we store data into the memory
+  // 3. Two database are created one holds only the values created while
+  // reading from memory i.e initial_db while other holds both the read and
+  // writen values of the memory i.e current_db
+  function logic [`SIZE_OF_THE_BUS - 1:0] mem_read(input logic [`SIZE_OF_THE_BUS - 1:0] m_addr);
+    logic [`SIZE_OF_THE_BUS - 1:0] mem_rdata;
+    
+        /* verilator lint_off WIDTH */
+        if (!initial_db.exists(m_addr >> 2)) begin
+          if (m_addr > 32'hFFFF) begin
+              current_db[m_addr >> 2] = $random;
+              initial_db[m_addr >> 2] = current_db[m_addr >> 2];
+          end
+          else begin
+              initial_db[m_addr >> 2] = instruction_generator();
+              current_db[m_addr >> 2] = initial_db[m_addr >> 2];
+          end
+        end
+        mem_rdata = initial_db[m_addr >> 2];
+    return mem_rdata;
+  endfunction
+
+  // Write task : Write the values to the memory.
+  // Input : memory address : address value where the data is stored.
+  //         write_strobe  : determines how many bytes are writen in the memory.
+  //         wdata : data to be written in the memory
+  // Functionality :
+  // Writes the value present in the internal register of the core to the memory address given by the instruction. 
+  task mem_write(input logic [`SIZE_OF_THE_BUS - 1:0] mem_addr, input logic [3:0] write_strobe, input logic [`SIZE_OF_THE_BUS - 1:0] wdata);
+     logic [`SIZE_OF_THE_BUS - 1:0] m_addr;
+
+       m_addr = mem_addr >> 2;
+       if (write_strobe[0]) current_db[m_addr][ 7: 0] = wdata[ 7: 0];
+       if (write_strobe[1]) current_db[m_addr][15: 8] = wdata[15: 8];
+       if (write_strobe[2]) current_db[m_addr][23:16] = wdata[23:16];
+       if (write_strobe[3]) current_db[m_addr][31:24] = wdata[31:24];
+  endtask
+
+endmodule

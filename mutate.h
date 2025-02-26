@@ -1,5 +1,5 @@
-#ifndef INSTRUCTION_H
-#define INSTRUCTION_H
+#ifndef MUTATE_H
+#define MUTATE_H
 
 #include <stdint.h>
 
@@ -20,8 +20,6 @@ typedef enum {
     B_TYPE = 0b1100011,
     FENCE = 0b0001111
 } INSTRUCTION_TYPE;
-
-INSTRUCTION_TYPE opcodes[11] = {R_TYPE, I_TYPE_LOAD, I_TYPE_JUMP, I_TYPE_ENV, I_TYPE_ARITH, J_TYPE, S_TYPE, U_TYPE_LOAD, U_TYPE_AUIPC, B_TYPE, FENCE}; 
 
 // I Type instruction
 typedef struct {
@@ -102,5 +100,8 @@ typedef union {
     btype btype_inst;
     utype utype_inst;
 } instruction_type;
+
+// Outputs a mutated sequence to a buffer
+int gen_mutate(int num_instructions, char* output, int buf_sz);
 
 #endif

@@ -10,6 +10,8 @@
     #define _NUM_INSTRUCTIONS 24
 #endif
 
+INSTRUCTION_TYPE opcodes[11] = {R_TYPE, I_TYPE_LOAD, I_TYPE_JUMP, I_TYPE_ENV, I_TYPE_ARITH, J_TYPE, S_TYPE, U_TYPE_LOAD, U_TYPE_AUIPC, B_TYPE, FENCE}; 
+
 // Pick a new opcode
 int mutate_opcode() {
     int new_opcode = opcodes[rand() % 11];
@@ -335,6 +337,92 @@ instruction_type mutate_instruction() {
     return instruction;
 }
 
+// Outputs a mutated sequence to a buffer
+int gen_mutate(int num_instructions, char* output, int buf_sz)
+{
+    if (!output || buf_sz == 0)
+    {
+        return 1;
+    }
+
+    output[0] = '\0'; // empty string
+    int out_pos = 0;
+
+    srand(time(NULL)); // seed rng
+
+    char* input_str;
+    input_str = "";
+
+    if (strlen(input_str) < 4)
+    {
+        for (int i = 0; i < num_instructions; ++i)
+        {
+            instruction_type instruction = mutate_instruction();
+            char str[11];
+            int written = sprintf(str, "%x ", instruction.raw_inst);
+            if (out_pos + written < buf_sz)
+            {
+                strcat(output + out_pos, str);
+                out_pos += written;
+            }
+            else
+            {
+                return 1; // buffer full or error
+            }
+        }
+    }
+    else
+    {
+        char* copy = strdup(input_str);
+        if (!copy)
+        {
+            return 1; // strdup failed
+        }
+        int percent_var = 10;
+        int percent_all = 20;
+        char* curr = copy;
+        int offset = 0;
+        instruction_type instruction;
+
+        while (*curr)
+        {
+            int count = sscanf(curr, "%x %n", &(instruction.raw_inst), &offset);
+            if (count == 1)
+            {
+                curr += offset;
+                int random_num = rand() % 100;
+                if (random_num < percent_var)
+                {
+                    int mutate_type = rand() % 100;
+                    if (mutate_type < percent_all)
+                    {
+                        instruction = mutate_instruction();
+                    }
+                    else
+                    {
+                        instruction = mutate_field(instruction);
+                    }
+                }
+                char str[11];
+                int written = sprintf(str, "%x ", instruction.raw_inst);
+                if (out_pos + written < buf_sz)
+                {
+                    strcat(output + out_pos, str);
+                    out_pos += written;
+                }
+                else
+                {
+                    free(copy);
+                    return 1; // buffer full or error
+                }
+            }
+            else break;
+        }
+        free(copy);
+    }
+    return 0;
+}
+/*
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <input_hex_string>\n", argv[0]);
@@ -411,4 +499,4 @@ int main(int argc, char *argv[]) {
     printf("%s\n", output_str);
 
     return 0;
-}
+}*/
